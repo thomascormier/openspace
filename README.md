@@ -6,4 +6,4 @@ If you want to test this feature, you will need the file object_recognition.py, 
 python object_recognition.py
 ```
 
-*This script has been taken from Murtaza's youtube tutorial that you can find [here](https://www.youtube.com/watch?v=GGeF_3QOHGE&ab_channel=Murtaza%27sWorkshop-RoboticsandAI )*
+*This script has been taken from Murtaza's tutorial. [Here](https://www.youtube.com/watch?v=GGeF_3QOHGE&ab_channel=Murtaza%27sWorkshop-RoboticsandAI ) is a link to his Github account.* 
