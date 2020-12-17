@@ -25,3 +25,8 @@ On this final one (not ready yet), you can display your webcam video on a stream
 ```
 streamlit run demo_streamlit/demo_cam_display.py
 ```
+
+## Version 1.0
+```
+streamlit run main.py
+```
