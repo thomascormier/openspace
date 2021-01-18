@@ -4,6 +4,7 @@ import numpy as np
 import pandas as pd
 import os
 from csv_functions import create_csv, update_csv
+from mail import send_mail
 
 cap = cv2.VideoCapture(0)
 whT = 608
@@ -98,7 +99,7 @@ def main():
         alert_placeholder.write("")
         if nb_pers >= nb_person_threshold:
             alert_placeholder.error(f"ALERT! There should be less than {nb_person_threshold} people and there are {nb_pers} people")
-
+            send_mail()
         df = pd.read_csv("number_of_people.csv")
         graph_placeholder.line_chart(df)
 
