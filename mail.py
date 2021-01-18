@@ -17,7 +17,7 @@ def send_mail():
     emails = email_list['EMAIL']
 
     sender_email = "projetiwa@gmail.com"
-    receiver_email = "ciubucalexandra3@gmail.com"
+    receiver_email = emails[0]
     password = "projet@iwa123"
 
     message = MIMEMultipart("alternative")
