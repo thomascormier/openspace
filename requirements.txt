@@ -1,5 +1,4 @@
 numpy
 pandas
 streamlit
-opencv-python
-os
+opencv
