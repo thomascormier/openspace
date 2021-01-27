@@ -30,3 +30,23 @@ streamlit run demo_streamlit/demo_cam_display.py
 ```
 streamlit run main.py
 ```
+
+### Version 2.0
+
+For Version 2 we will use most of the same things we already had on our project.
+For a good functioning of the project we need to have the following files:
+  - data/DB.csv
+  - yolo_files/coco.names
+  - csv_functions.py
+  - csv_trombinoscope.py
+  - email.xlsx
+  - ippon.jpg
+  - mail.py
+  - number_of_people.csv
+  - version2.py
+  - yolov3.cfg
+  - yolov3.weights
+After you make sure ALL of the above files, you can go ahead and run the following command (in the same folder in which you have the beforementioned files):
+```
+streamlit run version2.py
+```
