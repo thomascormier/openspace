@@ -46,7 +46,15 @@ For a good functioning of the project we need to have the following files:
   - version2.py
   - yolov3.cfg
   - yolov3.weights
-
+  
+You also need to have the following libraries installed:
+  - streamlit
+  - cv2
+  - numpy
+  - pandas
+  - os
+  - face_recognition
+  
 After you make sure that you have ALL of the above files, you can go ahead and run the following command (in the same folder in which you have the beforementioned files):
 ```
 streamlit run version2.py
