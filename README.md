@@ -49,12 +49,16 @@ For a good functioning of the project we need to have the following files:
   
 You also need to have the following libraries installed:
   - streamlit
-  - cv2
+  - opencv-python
   - numpy
   - pandas
   - os
   - face_recognition
-  
+
+You can do that by using the following command:
+```
+pip install library-name
+```
 After you make sure that you have ALL of the above files, you can go ahead and run the following command (in the same folder in which you have the beforementioned files):
 ```
 streamlit run version2.py
