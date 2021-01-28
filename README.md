@@ -59,6 +59,9 @@ You can do that by using the following command:
 ```
 pip install library-name
 ```
+If you encounter errors installing face_recognition on Windows, you can refer to the following link:
+https://github.com/ageitgey/face_recognition/issues/175#issue-257710508
+
 After you make sure that you have ALL of the above files, you can go ahead and run the following command (in the same folder in which you have the beforementioned files):
 ```
 streamlit run version2.py
