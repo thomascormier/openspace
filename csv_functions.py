@@ -1,12 +1,12 @@
 import csv
 
-def create_csv():
+def create_csv(name, field1, field2):
     """
     Create a csv called number_of_people.csv with the following headers :     
     number_of_people, nb_person_threshold
     """
-    with open('number_of_people.csv', 'w', newline='') as f:
-        fieldnames = ['number_of_people', 'nb_person_threshold']
+    with open(name, 'w', newline='') as f:
+        fieldnames = [field1, field2]
         writer = csv.DictWriter(f, fieldnames=fieldnames)
 
         writer.writeheader()

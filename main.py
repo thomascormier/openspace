@@ -6,7 +6,8 @@ import os
 import face_recognition
 from csv_functions import create_csv, update_csv
 from csv_trombinoscope import load_known_data, init_data
-from mail import send_mail
+from mail import send_mail, update_csv_mail
+from smtplib import SMTPRecipientsRefused
 
 # constants trombinoscope
 PATH_DATA = 'DB.csv'
@@ -22,6 +23,7 @@ whT = 608
 confThreshold = 0.5
 nmsThreshold = 0.3
 nb_pers = 0
+
 
 classesFile = 'coco.names'
 classNames = []
@@ -106,7 +108,7 @@ def face_distance_to_conf(face_distance, face_match_threshold=0.6):
         return linear_val + ((1.0 - linear_val) * np.power((linear_val - 0.5) * 2, 0.2))
 
 
-##################################### functions thomas
+##################################### functions
 
 
 def findObjects(outputs, img):
@@ -151,7 +153,7 @@ def main():
     st.title("Open space people counter")
     st.text("Build with Streamlit and OpenCV")
 
-    activities = ["Dashboard", "Upload Photo", "About"]
+    activities = ["Dashboard", "Upload Photo","Add Supervisors", "About"]
 
     choice = st.sidebar.selectbox("Select Activty", activities)
 
@@ -162,6 +164,21 @@ def main():
         st.markdown("Built in Streamlit by Alexandra, Thomas and Andrei")
         st.text("Projet Fin Etudes OpenSpace")
         st.text("Projet proposé par Ippon Technologies")
+
+
+########################################### main About
+    if choice == 'Add Supervisors':
+
+        person_name = st.text_input('Name:', '')
+        person_email = st.text_input('Email:', '')
+        if st.button('Add'):
+            update_csv_mail(person_email, person_name)
+        if st.button('Reset'):
+            os.remove('email.csv')
+            name = 'email.csv'
+            field1 = 'EMAIL'
+            field2 = 'NAME'
+            create_csv(name, field1, field2)
 
 ########################################### main face capture
     elif choice == 'Upload Photo':
@@ -247,9 +264,12 @@ def main():
         image_placeholder = st.empty()
         people_placeholder = st.empty()
         graph_placeholder = st.empty()
+        email_placeholder = st.empty()
 
-        create_csv()
-        os.remove('number_of_people.csv')
+        name = 'number_of_people.csv'
+        field1 = 'number_of_people'
+        field2 ='nb_person_threshold'
+        create_csv(name,field1,field2)
 
 
         while True:
@@ -287,7 +307,10 @@ def main():
             if nb_pers >= nb_person_threshold:
                 alert_placeholder.error(
                     f"ALERT! There should be less than {nb_person_threshold} people and there are {nb_pers} people")
-                send_mail()
+                try:
+                    send_mail()
+                except SMTPRecipientsRefused:
+                    email_placeholder.error(f"ATTENTION! One or more email adresses in the database is not valid, please reset and try once more!")
 
             df = pd.read_csv("number_of_people.csv")
             graph_placeholder.line_chart(df)

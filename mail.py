@@ -4,8 +4,19 @@ from email.mime.multipart import MIMEMultipart
 from time import time
 from email.mime.image import MIMEImage
 import pandas as pd
+import csv
 
 late_date=0
+def update_csv_mail(email,name):
+    """
+    Add a new row to the csv file number_of_people.csv
+    """
+    with open('email.csv', 'a', newline='') as f:
+        fieldnames = ['EMAIL', 'NAME']
+        writer = csv.DictWriter(f, fieldnames=fieldnames)
+
+        writer.writerow({'EMAIL': email, 'NAME': name})
+    f.close()
 
 def send_mail():
     global late_date
