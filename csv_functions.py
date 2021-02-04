@@ -12,7 +12,7 @@ def create_csv(name, field1, field2):
         writer.writeheader()
     f.close()
 
-def update_csv(nb_pers):
+def update_csv(nb_pers,threshold):
     """
     Add a new row to the csv file number_of_people.csv
     """
@@ -20,5 +20,5 @@ def update_csv(nb_pers):
         fieldnames = ['number_of_people', 'nb_person_threshold']
         writer = csv.DictWriter(f, fieldnames=fieldnames)
 
-        writer.writerow({'number_of_people': nb_pers, 'nb_person_threshold': 3})
+        writer.writerow({'number_of_people': nb_pers, 'nb_person_threshold': threshold})
     f.close()

@@ -8,6 +8,7 @@ from csv_functions import create_csv, update_csv
 from csv_trombinoscope import load_known_data, init_data
 from mail import send_mail, update_csv_mail
 from smtplib import SMTPRecipientsRefused
+#import SessionState
 
 # constants trombinoscope
 PATH_DATA = 'DB.csv'
@@ -24,6 +25,7 @@ confThreshold = 0.5
 nmsThreshold = 0.3
 nb_pers = 0
 
+#session = SessionState.get(run_id=0)
 
 classesFile = 'coco.names'
 classNames = []
@@ -111,7 +113,7 @@ def face_distance_to_conf(face_distance, face_match_threshold=0.6):
 ##################################### functions
 
 
-def findObjects(outputs, img):
+def findObjects(outputs, img, threshold):
     hT, wT, cT = img.shape
     bbox = []
     classIds = []
@@ -142,7 +144,7 @@ def findObjects(outputs, img):
                     (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 0, 255))
         if classNames[classIds[i]].upper() == "PERSON":
             nb_pers += 1
-    update_csv(nb_pers)
+    update_csv(nb_pers, threshold)
     return nb_pers
 
 
@@ -153,9 +155,9 @@ def main():
     st.title("Open space people counter")
     st.text("Build with Streamlit and OpenCV")
 
-    activities = ["Dashboard", "Upload Photo","Add Supervisors", "About"]
+    activities = ["Dashboard", "Upload Photo", "Add Supervisors", "About"]
 
-    choice = st.sidebar.selectbox("Select Activty", activities)
+    choice = st.sidebar.selectbox("Select Activity", activities)
 
 
 ########################################### main About
@@ -179,7 +181,6 @@ def main():
             field1 = 'EMAIL'
             field2 = 'NAME'
             create_csv(name, field1, field2)
-
 ########################################### main face capture
     elif choice == 'Upload Photo':
         # disable warning signs:
@@ -229,6 +230,7 @@ def main():
             dataframe = DB[COLS_INFO]
             try:
                 # compare roi to known faces, show distances and similarities
+                var = 0
                 face_to_compare = face_recognition.face_encodings(roi)[0]
                 dataframe['distance'] = face_recognition.face_distance(
                     face_encodings, face_to_compare
@@ -244,11 +246,13 @@ def main():
                 # add roi to known database
                 if st.checkbox('Add it to known faces'):
                     face_name = st.text_input('Name:', '')
-                    face_des = st.text_input('Desciption:', '')
+                    face_des = st.text_input('Description:', '')
                     if st.button('Add'):
                         encoding = face_to_compare.tolist()
                         DB.loc[len(DB)] = [face_name, face_des] + encoding
                         DB.to_csv(PATH_DATA, index=False)
+                        var = 1
+                #session.run_id += 1
             except IndexError:
                 st.subheader("This image is not relatable to our dataset")
         else:
@@ -269,7 +273,7 @@ def main():
         name = 'number_of_people.csv'
         field1 = 'number_of_people'
         field2 ='nb_person_threshold'
-        create_csv(name,field1,field2)
+        create_csv(name, field1, field2)
 
 
         while True:
@@ -283,17 +287,19 @@ def main():
             blob = cv2.dnn.blobFromImage(img, 1 / 255, (whT, whT), [0, 0, 0], 1, crop=False)
             net.setInput(blob)
 
+            try:
+                name, similarity, img = recognize_frame(img)
+            except TypeError:
+                variable = 0
+
             layerNames = net.getLayerNames()
             outputNames = [layerNames[i[0] - 1] for i in net.getUnconnectedOutLayers()]
 
             outputs = net.forward(outputNames)
 
-            nb_pers = findObjects(outputs, img)
+            nb_pers = findObjects(outputs, img, nb_person_threshold)
 
-            try:
-                name, similarity, img = recognize_frame(img)
-            except TypeError:
-                variable = 0
+
 
 
             people_placeholder.write(f"There are {nb_pers} people here!")
@@ -311,6 +317,8 @@ def main():
                     send_mail()
                 except SMTPRecipientsRefused:
                     email_placeholder.error(f"ATTENTION! One or more email adresses in the database is not valid, please reset and try once more!")
+                except IndexError:
+                    email_placeholder.error(f"ATTENTION! There are no email adresses inserted yet. Go insert at least one in the Add Supervisors panel and try again after!")
 
             df = pd.read_csv("number_of_people.csv")
             graph_placeholder.line_chart(df)
