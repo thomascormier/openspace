@@ -22,7 +22,7 @@ def send_mail():
     global late_date
     now=time()
 
-   # reading the spreadsheet
+    # reading the spreadsheet
     email_list = pd.read_csv('email.csv')
     # getting the emails
     emails = email_list['EMAIL']
@@ -32,7 +32,7 @@ def send_mail():
     password = "pfe_team16@"
 
     message = MIMEMultipart("alternative")
-    message["Subject"] = "Reunion demo Ippon"
+    message["Subject"] = "Alerte Openspace"
     message["From"] = sender_email
     message["To"] = receiver_email
 
